@@ -1,1 +1,187 @@
+Triggers sql solution 
 
+
+---------------------------------------------------------
+-- Employee Management System - Trigger Exercises
+---------------------------------------------------------
+
+---------------------------------------------------------
+-- Exercise 1
+-- Create EmployeeChanges Table
+---------------------------------------------------------
+
+CREATE TABLE EmployeeChanges
+(
+    ChangeID INT IDENTITY(1,1) PRIMARY KEY,
+    EmployeeID INT,
+    OldSalary DECIMAL(10,2),
+    NewSalary DECIMAL(10,2),
+    ChangeDate DATETIME DEFAULT GETDATE()
+);
+
+---------------------------------------------------------
+-- AFTER UPDATE Trigger
+---------------------------------------------------------
+
+CREATE TRIGGER trg_AfterSalaryUpdate
+ON Employees
+AFTER UPDATE
+AS
+BEGIN
+
+    INSERT INTO EmployeeChanges
+    (
+        EmployeeID,
+        OldSalary,
+        NewSalary
+    )
+
+    SELECT
+        d.EmployeeID,
+        d.Salary,
+        i.Salary
+
+    FROM deleted d
+    INNER JOIN inserted i
+        ON d.EmployeeID = i.EmployeeID
+
+    WHERE d.Salary <> i.Salary;
+
+END;
+GO
+
+---------------------------------------------------------
+-- Test AFTER Trigger
+---------------------------------------------------------
+
+UPDATE Employees
+SET Salary = 6500
+WHERE EmployeeID = 2;
+
+SELECT * FROM EmployeeChanges;
+
+---------------------------------------------------------
+-- Exercise 2
+-- INSTEAD OF DELETE Trigger
+---------------------------------------------------------
+
+CREATE TRIGGER trg_PreventDelete
+ON Employees
+INSTEAD OF DELETE
+AS
+BEGIN
+
+    RAISERROR
+    (
+        'Employee records cannot be deleted.',
+        16,
+        1
+    );
+
+END;
+GO
+
+---------------------------------------------------------
+-- Test Delete Trigger
+---------------------------------------------------------
+
+DELETE FROM Employees
+WHERE EmployeeID = 1;
+
+---------------------------------------------------------
+-- Exercise 3
+-- LOGON Trigger
+---------------------------------------------------------
+
+CREATE TRIGGER trg_LoginRestriction
+ON ALL SERVER
+FOR LOGON
+AS
+BEGIN
+
+    IF DATEPART(HOUR, GETDATE()) >= 2
+       AND DATEPART(HOUR, GETDATE()) < 3
+
+    BEGIN
+
+        ROLLBACK;
+
+    END
+
+END;
+GO
+
+---------------------------------------------------------
+-- Exercise 4
+-- Modify Trigger
+---------------------------------------------------------
+
+/*
+This exercise is performed in SQL Server Management Studio.
+
+Object Explorer
+    ->
+Programmability
+    ->
+Database Triggers
+    ->
+Right Click Trigger
+    ->
+Modify
+
+After making changes, Execute the script.
+*/
+
+---------------------------------------------------------
+-- Exercise 5
+-- Delete Trigger
+---------------------------------------------------------
+
+-- DROP TRIGGER trg_AfterSalaryUpdate;
+
+-- DROP TRIGGER trg_PreventDelete;
+
+---------------------------------------------------------
+-- Exercise 6
+-- Add AnnualSalary Column
+---------------------------------------------------------
+
+ALTER TABLE Employees
+ADD AnnualSalary DECIMAL(10,2);
+
+---------------------------------------------------------
+-- AFTER UPDATE Trigger
+---------------------------------------------------------
+
+CREATE TRIGGER trg_UpdateAnnualSalary
+ON Employees
+AFTER UPDATE
+AS
+BEGIN
+
+    UPDATE Employees
+
+    SET AnnualSalary = Salary * 12
+
+    WHERE EmployeeID IN
+    (
+        SELECT EmployeeID
+        FROM inserted
+    );
+
+END;
+GO
+
+---------------------------------------------------------
+-- Test Annual Salary Trigger
+
+
+UPDATE Employees
+SET Salary = 9000
+WHERE EmployeeID = 3;
+
+SELECT
+    EmployeeID,
+    Salary,
+    AnnualSalary
+FROM Employees;
