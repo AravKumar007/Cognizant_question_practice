@@ -1,0 +1,18 @@
+<section class="home">
+  <h1>{{ portalName }}</h1>
+  <p>Your one-stop portal to browse courses, track enrollment, and check your grades.</p>
+
+  <div class="stats-row">
+    <div class="stat"><strong>{{ coursesAvailable }}</strong><span>Courses Available</span></div>
+    <div class="stat"><strong>{{ enrolledCount }}</strong><span>Enrolled</span></div>
+    <div class="stat"><strong>{{ gpa }}</strong><span>GPA</span></div>
+  </div>
+
+  <button type="button" [disabled]="!isPortalActive" (click)="onEnrollClick()">Enroll Now</button>
+  <p *ngIf="message">{{ message }}</p>
+
+  <div class="search-box">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search courses..." />
+    <p>Searching for: {{ searchTerm }}</p>
+  </div>
+</section>

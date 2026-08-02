@@ -1,0 +1,53 @@
+Hands-On 1, Task 1 - Notes on generated project files
+=======================================================
+
+angular.json
+  Workspace-level build configuration - defines how `ng build`, `ng serve`,
+  and `ng test` behave (entry files, styles, assets, budgets, output path).
+
+tsconfig.json
+  Base TypeScript compiler config shared by the whole workspace (strict
+  mode, target ES version, module resolution) - app and spec configs extend it.
+
+tsconfig.app.json
+  TypeScript config specifically for the application build - extends the
+  base tsconfig, points at src/main.ts as the entry point, excludes spec files.
+
+package.json
+  Lists npm dependencies/devDependencies (Angular packages, RxJS, NgRx,
+  testing libs) and defines the CLI scripts (start, build, test, watch).
+
+src/main.ts
+  The actual application entry point - calls bootstrapApplication() with
+  the root AppComponent and the app-wide providers from app.config.ts.
+
+src/app/app.config.ts
+  Standalone-mode replacement for app.module.ts - registers app-wide
+  providers (router, HttpClient, NgRx store/effects) via the `providers` array.
+
+src/app/app.component.ts
+  The root component - hosts <app-header> and <router-outlet>, so every
+  routed page renders inside it.
+
+src/index.html
+  The single HTML page the whole SPA lives inside - contains the
+  <app-root> tag Angular bootstraps into, and the <base href="/"> tag
+  routing depends on.
+
+Hands-On 1, Task 1 - Step 4 (ng build output)
+==============================================
+`ng build` writes to dist/student-course-portal/browser/. The compiled,
+bundled application code lives in the hashed main-*.js file (plus
+polyfills-*.js and styles-*.css) - main.js is the one that contains this
+project's own TypeScript, compiled and tree-shaken down to JS.
+
+Hands-On 1, Task 1 - Step 5 (budgets)
+=======================================
+In angular.json under architect > build > configurations > production >
+budgets, the "initial" bundle budget is set to maximumWarning: 500kb,
+maximumError: 1mb. This controls the INITIAL JS bundle size downloaded on
+first load - the CLI prints a build warning past 500kb and fails the build
+outright past 1mb, catching bundle bloat before it ships. A second budget
+for anyComponentStyle (4kb warning / 8kb error) does the same for any
+single component's CSS file, to stop one component's styles from silently
+growing out of control.

@@ -1,0 +1,12 @@
+<section class="course-detail">
+  <p *ngIf="loading">Loading course...</p>
+
+  <div *ngIf="!loading && course">
+    <h2>{{ course.name }}</h2>
+    <p>Code: {{ course.code }}</p>
+    <p>Credits: {{ course.credits }}</p>
+    <p>Status: {{ course.gradeStatus }}</p>
+  </div>
+
+  <p *ngIf="!loading && !course">Course not found.</p>
+</section>

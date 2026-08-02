@@ -1,0 +1,14 @@
+<section class="student-profile">
+  <h2>My Profile</h2>
+  <p>Name: Arav Kumar</p>
+  <p>Email: arav@example.com</p>
+  <p>GPA: 3.8</p>
+
+  <h3>Enrolled Courses</h3>
+  <ul>
+    <li *ngFor="let course of (enrolledCourses$ | async)">
+      {{ course.name }} ({{ course.code }})
+    </li>
+  </ul>
+  <p *ngIf="(enrolledCourses$ | async)?.length === 0">No courses enrolled yet.</p>
+</section>

@@ -1,0 +1,22 @@
+.stats-row {
+  display: flex;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.stat {
+  background: white;
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.stat strong {
+  display: block;
+  font-size: 1.5rem;
+}
+
+.search-box {
+  margin-top: 24px;
+}

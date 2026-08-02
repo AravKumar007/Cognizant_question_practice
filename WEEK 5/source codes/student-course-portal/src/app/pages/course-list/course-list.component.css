@@ -1,0 +1,19 @@
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 8px;
+}
+
+.error {
+  color: #e5484d;
+}
+
+.course-grid {
+  display: grid;
+  gap: 12px;
+}
